@@ -1,21 +1,19 @@
 package org.acme.client;
 
-import org.acme.entities.DataPayload;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 
-import jakarta.ws.rs.Consumes;
+import jakarta.transaction.Transactional;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.PathParam;
 
-@Path("/store")
 @RegisterRestClient(configKey = "storage-service")
+@Path("/activation")
 public interface StorageServiceClient {
     
     @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    void activateClient(DataPayload payload);
+    @Transactional
+    @Path("/{name}/{age}")
+    public void activateClient(@PathParam("name") String name, @PathParam("age") int age);
 
 }

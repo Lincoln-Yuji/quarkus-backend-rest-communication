@@ -13,7 +13,10 @@ import lombok.Setter;
 @Setter
 public class DataPayload {
 
-    @JsonProperty("data")
-    private String data;
+    @JsonProperty("name")
+    private String name;
+
+    @JsonProperty("age")
+    private int age;
     
 }

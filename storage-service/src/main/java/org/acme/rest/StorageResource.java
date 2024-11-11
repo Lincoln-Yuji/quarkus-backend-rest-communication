@@ -9,7 +9,8 @@ import jakarta.transaction.Transactional;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
-
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -23,14 +24,20 @@ public class StorageResource {
     @POST
     @Transactional
     @Path("/{name}/{age}")
-    public void activateClient(@PathParam("name") String name, @PathParam("age") int age) {
-        log.info("START ::: Client Activation");
+    public Response activateClient(@PathParam("name") String name, @PathParam("age") int age)
+    {
+        try {
+            Client newClient = new Client();
+            newClient.name = name;
+            newClient.age = age;
+            clientRepository.persist(newClient);   
+        } catch (Exception e) {
+            log.info("INFO ::: FAILED persistance: " + e.getMessage());
+            return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+        }
 
-        Client newClient = new Client();
-        newClient.name = name;
-        newClient.age = age;
-        clientRepository.persist(newClient);
+        log.info("Client with NAME: " + name + ", AGE: " + age + " saved successfuly");
 
-        log.info("END ::: Client Activation");
+        return Response.ok(true).build();
     }
 }
